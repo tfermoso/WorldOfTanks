@@ -11,6 +11,8 @@ $(document).ready(function(){
 			method: 'POST',
 			success: function(res, textStatus, xhr){
 				console.log(res);
+				if(res.login)
+					window.location='juego.html';
 			}
 				
 		});
