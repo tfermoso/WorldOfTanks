@@ -35,7 +35,7 @@ const mysqlconnection = {
 */
 function crearUsuario(email, nombre, username, pass, f) {
     const sql = 'SELECT * FROM usuarios.users where email = "' + email + '"';
-    const sql2 = 'INSERT INTO usuarios.users (email, nombre, username, password) VALUES("' + email + '", "' + nombre + '", "' + username + '", "' + pass + '")';
+    const sql2 = 'INSERT INTO usuarios.users (email, name, username, password) VALUES("' + email + '", "' + nombre + '", "' + username + '", "' + pass + '")';
     let cliente = mysql.createConnection(mysqlconnection);
     cliente.connect(err => {
         if (err) {
