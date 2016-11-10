@@ -26,10 +26,10 @@ class Tablero{
 	get tablero(){
 		return this._tablero;
 	}
-	get info(){
+	get info(){ //Sustituir < por <= debido al cambio realizado en las propiedades fila y columna
 		let elem = [];	
-		for (let x = 0;x<this._columnas;x++){
-			for (let y=0;y<this._filas;y++){
+		for (let x = 0;x<=this._columnas;x++){
+			for (let y=0;y<=this._filas;y++){
 				if(this._tablero[x][y].con != null){
 					elem.push(this._tablero[x][y].con);
 				}
@@ -43,6 +43,7 @@ class Tablero{
 		if (fila>this._filas || fila<0 || columna>this._columnas || columna<0){
 			console.log("Error: Fuera de rango");
 		} else {
+			console.log('insertando objeto '+ objeto.tipo+' en: col: '+columna+' fila: '+fila);
 			this._tablero[columna][fila].con = objeto;
 		}
 	}
@@ -58,21 +59,29 @@ class Tablero{
 		}
 	}
 	mover(objeto){
+		let mov=(objeto.tipo=="tanque")?objeto.nombre:objeto.tipo
+		console.log('Vamos a mover el '+mov+', posición actual: '+objeto.pos.x+','+objeto.pos.y+' orientacion: '+objeto.pos.o);
 		let delante = this.casillaDelante(objeto);
 		let posicion = objeto.pos;
 		if (delante){
+			console.log('Estamos dentro del tablero..');
 			if(delante.con == null){
+				console.log('No hay nada delante, me puedo mover');
 				this.insertar(objeto,delante.pos.x,delante.pos.y);
 				console.log(posicion)
 				this._tablero[posicion.x][posicion.y].con = null;
 			} else {
 				if (objeto.tipo == "tanque"){
+					
 					if (delante.con.tipo == "tanque"){
+						console.log('No me puedo mover, choqué con un tanque');
 						delante.con.vida-=2;
 						objeto.vida--;
 					} else if (delante.con.tipo == "roca") {
+						console.log('No me puedo mover, choqué con una roca');
 						objeto.vida--;
 					} else if (delante.con.tipo == "bala"){
+						console.log('Me puedo mover, choqué con una bala');
 						objeto.vida--;
 						this._balas.delete(delante.pos);
 						this.insertar(objeto,delante.pos.x,delante.pos.y);
@@ -94,17 +103,21 @@ class Tablero{
 					}
 				}
 			}
+		}else{
+			console.log('Fuera del tablero');
 		}
 	}
 
 	girar(objeto,direccion){
 		let orientaciones = ["norte","este","sur","oeste"];
 		let index = orientaciones.indexOf(objeto.pos.o);
-
 		if(direccion=="derecha") {
-			objeto.pos.o= index==orientaciones.length-1 ?  orientaciones[0]: orientaciones[index+1];
+			console.log('girando a la derecha..');
+			objeto.o = (index==orientaciones.length-1) ? orientaciones[0]: orientaciones[index+1];
 		}
-		if(direccion=="izquierda") { index==0 ? console.log("1"):objeto.pos.o = orientaciones[index-1];/*objeto.pos.o = orientaciones[orientaciones.length-1]:objeto.pos.o = orientaciones[index-1];*/
+		if(direccion=="izquierda") {
+			console.log(objeto.pos.o + ' girando a la izquierda..');
+			objeto.o = (index==0) ? orientaciones[orientaciones.length-1] : orientaciones[index-1];
 		}
 		return;
 	}
